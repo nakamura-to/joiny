@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>chat</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1><span>WebRTC Chat Room</span></h1>
+
+<section id="init">
+    <form>
+        <input id="key" type="text" maxlength="20" placeholder="Room Key (optional)" size="30">
+        <input id="name" type="text" maxlength="20" placeholder="Your Name (optional)" size="30">
+        <input type="submit" value="Connect">
+    </form>
+</section>
+
+<section id="main">
+    <h2 id="room"></h2>
+
+    <div id="video-list">
+        <div id="local-user">
+            <video autoplay></video>
+        </div>
+    </div>
+
+    <div id="board"></div>
+
+    <div id="chat">
+        <form>
+            <input id="message" type="text" size="50" placeholder="Message (required)">
+            <input type="submit" value="Send">
+        </form>
+    </div>
+
+    <div id="description">
+        <p>
+            Send a message or drop a file to this page.
+        </p>
+        <p>
+            The file size must be relatively small.
+        </p>
+    </div>
+
+    <div id="log"></div>
+</section>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-2.0.3.js"></script>
+<script type="text/javascript" src="join.js"></script>
+<script type="text/javascript" src="app.js"></script>
+</body>
+</html>

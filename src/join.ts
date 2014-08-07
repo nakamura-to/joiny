@@ -1,0 +1,11 @@
+///<reference path="../typings/tsd.d.ts" />
+///<reference path="extension.ts" />
+///<reference path="emitter.ts" />
+///<reference path="peer.ts" />
+///<reference path="bundle.ts" />
+///<reference path="channel.ts" />
+///<reference path="connection.ts" />
+///<reference path="session.ts" />
+///<reference path="signaling.ts" />
+///<reference path="coordinator.ts" />
+///<reference path="webrtc.ts" />
