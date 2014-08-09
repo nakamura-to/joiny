@@ -1,7 +1,7 @@
-Join : Simple Multicast with WebRTC
+JoinJS - Simple Multicast with WebRTC
 ===================================
 
-Join simplifies WebRTC API and allows you to communicate with multiple peers transparently.
+JoinJS simplifies WebRTC API and allows you to communicate with multiple peers transparently.
 
 ```js
 // get a WebRTC object

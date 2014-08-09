@@ -1,7 +1,7 @@
-Join API
-========
+JoinJS API
+==========
 
-Join API is highly event-based.
+JoinJS API is highly event-based.
 
 join
 ----
