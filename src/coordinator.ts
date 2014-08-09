@@ -146,7 +146,7 @@ module join {
 
             connection.onicecandidate = (event) => {
                 if (event.candidate) {
-                    this.config.logger('debug', 'icecandidate seding: [' + local.id + '->' + remote.id + ']');
+                    this.config.logger('debug', 'icecandidate sending: [' + local.id + '->' + remote.id + ']');
                     this.signalingChannel.send({
                         type: 'icecandidate',
                         candidate: event.candidate,
