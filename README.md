@@ -70,7 +70,10 @@ Build
 -----
 
 ```shell
+$ npm install typescript -g
+$ npm install tsd -g
 $ npm install
+$ tsd reinstall -so
 $ gulp
 ```
 
