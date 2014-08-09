@@ -1,10 +1,10 @@
 {
   "name": "join",
   "version": "0.0.0",
-  "description": "Simple Mesh Network with WebRTC",
-  "main": "gulp.js",
+  "description": "Simple Multicast with WebRTC",
   "author": "Toshihiro Nakamura",
-  "license": "The MIT License",
+  "repository": {"type": "git", "url": "git://github.com/nakamura-to/join.git"},
+  "license": "MIT",
   "engines": {
     "node": "0.10.x"
   },
