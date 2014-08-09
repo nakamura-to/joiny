@@ -22,7 +22,7 @@ webRTC.on('remote', onRemote);
 // get a chat channel bundle with the `onChatChannel` callback
 webRTC.on('chat.channel', onChatChannel);
 
-// get a file channel bundle with the `onChatChannel` callback
+// get a file channel bundle with the `onFileChannel` callback
 webRTC.on('file.channel', onFileChannel);
 
 // start communication
