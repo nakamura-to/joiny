@@ -272,7 +272,7 @@ The listener receive an object which contains a `join.Remote` object.
 ```js
 webRTC.on('chat.channel', function onChatChannel(channel) {
   channel.on('open', function (event) {
-    var remote = e.remote; // remote peer
+    var remote = event.remote; // remote peer
     ...
   });
 });
@@ -287,8 +287,8 @@ a `join.Remote` object and a data object.
 ```js
 webRTC.on('chat.channel', function onChatChannel(channel) {
   channel.on('data', function (event) {
-    var remote = e.remote; // remote peer
-    var data = e.data;     // received data
+    var remote = event.remote; // remote peer
+    var data = event.data;     // received data
     ...
   });
 });
@@ -302,7 +302,7 @@ The listener receive an object which contains a `join.Remote` object.
 ```js
 webRTC.on('chat.channel', function onChatChannel(channel) {
   channel.on('close', function (event) {
-    var remote = e.remote; // remote peer
+    var remote = event.remote; // remote peer
     ...
   });
 });
@@ -318,8 +318,8 @@ a `join.Remote` object and an error object.
 ```js
 webRTC.on('chat.channel', function onChatChannel(channel) {
   channel.on('error', function (event) {
-    var remote = e.remote; // remote peer
-    var error = e.error;   // error object throw from RTCDataChannel#send
+    var remote = event.remote; // remote peer
+    var error = event.error;   // error object throw from RTCDataChannel#send
     ...
   });
 });
