@@ -27,52 +27,52 @@ module join {
 
     export class SignalingChannel {
 
-        private url: string;
-        private webSocket: WebSocket;
-        private emitter = new EventEmitter();
+        private _url: string;
+        private _webSocket: WebSocket;
+        private _emitter = new EventEmitter();
 
-        constructor(host: string, secure: boolean) {
-            this.url = (secure ? 'wss' : 'ws') + '://' + host;
+        constructor(_host: string, _secure: boolean) {
+            this._url = (_secure ? 'wss' : 'ws') + '://' + _host;
         }
 
         start() {
-            this.webSocket = new WebSocket(this.url);
+            this._webSocket = new WebSocket(this._url);
 
-            this.webSocket.onopen = (event: MessageEvent) =>
-                this.emitter.emit('open', event);
+            this._webSocket.onopen = (event: MessageEvent) =>
+                this._emitter.emit('open', event);
 
-            this.webSocket.onmessage = (event: MessageEvent) => {
+            this._webSocket.onmessage = (event: MessageEvent) => {
                 var signal: any = JSON.parse(event.data);
-                this.emitter.emit(signal.type, signal);
+                this._emitter.emit(signal.type, signal);
             };
         }
 
         send(signal: ISignal): void {
-            this.webSocket.send(JSON.stringify(signal));
+            this._webSocket.send(JSON.stringify(signal));
         }
 
         set onopen(listener: (event: MessageEvent) => void) {
-            this.on('open', listener);
+            this._on('open', listener);
         }
 
         set onsubscription(listener: (signal: ISubscriptionSignal) => void) {
-            this.on('subscription', listener);
+            this._on('subscription', listener);
         }
 
         set onicecandidate(listener: (signal: IIceCandidateSignal) => void) {
-            this.on('icecandidate', listener);
+            this._on('icecandidate', listener);
         }
 
         set onoffer(listener: (signal: IOfferSignal) => void) {
-            this.on('offer', listener);
+            this._on('offer', listener);
         }
 
         set onanswer(listener: (signal: IAnswerSignal) => void) {
-            this.on('answer', listener);
+            this._on('answer', listener);
         }
 
-        private on(type: string, listener: (event: any) => void) {
-            this.emitter.on(type, listener);
+        private _on(type: string, listener: (event: any) => void) {
+            this._emitter.on(type, listener);
         }
     }
 }

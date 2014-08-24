@@ -3,29 +3,29 @@ module join {
 
     export class Session {
 
-        private connections: { [id: string]: Connection } = {};
-        private bundles: { [label: string]: ChannelBundle } = {};
+        private _connections: { [id: string]: Connection } = {};
+        private _bundles: { [label: string]: ChannelBundle } = {};
 
-        constructor(private local: Local, private logger: (log: string, message: string) => void) {
+        constructor(private _local: Local, private _logger: (log: string, message: string) => void) {
         }
 
         createConnection(peerConnection: RTCPeerConnection, channelsConfig: any, peer: IPeer, init: any): Connection {
-            var local = this.local;
+            var local = this._local;
             var remote = new Remote(peer.id, peer.name);
             var connection = new Connection(peerConnection, local, remote);
 
-            this.logger('debug', 'peer connection opend: [' + local.id + '<->' + remote.id + ']');
+            this._logger('debug', 'peer connection opend: [' + local.id + '<->' + remote.id + ']');
 
             init(connection);
 
             connection.onclose = () => {
-                this.logger('debug', 'peer connection closed: [' + local.id + '-x-' + remote.id + ']');
-                delete this.connections[connection.remote.id];
+                this._logger('debug', 'peer connection closed: [' + local.id + '-x-' + remote.id + ']');
+                delete this._connections[connection.remote.id];
             };
 
-            this.connections[connection.remote.id] = connection;
+            this._connections[connection.remote.id] = connection;
 
-            this.local.remote(connection.remote);
+            this._local.remote(connection.remote);
             channelsConfig.forEach((config: any, i: number) => {
                 var channel = this.createChannel(connection, config, String(i));
                 this.addChannel(channel);
@@ -34,8 +34,8 @@ module join {
         }
 
         findConnection(peer: IPeer): Connection {
-            if (this.connections[peer.id]) {
-                return this.connections[peer.id];
+            if (this._connections[peer.id]) {
+                return this._connections[peer.id];
             }
             throw new Error('connection [' + peer.id +'] not found');
         }
@@ -50,14 +50,14 @@ module join {
 
         private addChannel(channel: Channel) {
             var label = channel.label;
-            var bundle = this.bundles[label];
+            var bundle = this._bundles[label];
 
             if (!bundle) {
-                bundle = new ChannelBundle(label, this.local, this.logger);
-                this.bundles[label] = bundle;
+                bundle = new ChannelBundle(label, this._local, this._logger);
+                this._bundles[label] = bundle;
                 bundle.onclose = () =>
-                    delete this.bundles[label];
-                this.local.bundle(bundle);
+                    delete this._bundles[label];
+                this._local.bundle(bundle);
             }
 
             bundle.add(channel);

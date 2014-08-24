@@ -67,7 +67,7 @@ websocketServer.on('request', function(request) {
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
             var signal = JSON.parse(message.utf8Data);
-            console.log('on message: type =' + signal.type);
+            console.log('_on message: type =' + signal.type);
             if (signal) {
                 if (signal.type === 'subscription') {
                     connection.key = signal.key;

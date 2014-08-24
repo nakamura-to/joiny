@@ -6,7 +6,7 @@ describe('Channel', function () {
 
         var channel = new join.Channel({}, {});
         channel.onopen = spy;
-        channel.emit('open', event);
+        channel._emitter.emit('open', event);
 
         expect(spy).toHaveBeenCalledWith(event);
     });
@@ -17,7 +17,7 @@ describe('Channel', function () {
 
         var channel = new join.Channel({}, {});
         channel.onmessage = spy;
-        channel.emit('message', event);
+        channel._emitter.emit('message', event);
 
         expect(spy).toHaveBeenCalledWith(event);
     });
@@ -28,7 +28,7 @@ describe('Channel', function () {
 
         var channel = new join.Channel({}, {});
         channel.onerror = spy;
-        channel.emit('error', event);
+        channel._emitter.emit('error', event);
 
         expect(spy).toHaveBeenCalledWith(event);
     });
@@ -39,7 +39,7 @@ describe('Channel', function () {
 
         var channel = new join.Channel({}, {});
         channel.onclose = spy;
-        channel.emit('close', event);
+        channel._emitter.emit('close', event);
 
         expect(spy).toHaveBeenCalledWith(event);
     });
@@ -50,7 +50,7 @@ describe('Channel', function () {
 
         var channel = new join.Channel({}, {});
         channel.onsending = spy;
-        channel.emit('sending', event);
+        channel._emitter.emit('sending', event);
 
         expect(spy).toHaveBeenCalledWith(event);
     });

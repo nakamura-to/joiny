@@ -3,24 +3,24 @@ module join {
 
     export class Channel {
 
-        private emitter = new EventEmitter();
+        private _emitter = new EventEmitter();
 
-        constructor(private dataChannel: RTCDataChannel, private _remote: Remote) {
-            this.dataChannel.onopen = (event: Event) =>
-                this.emitter.emit('open', event);
+        constructor(private _dataChannel: RTCDataChannel, private _remote: Remote) {
+            this._dataChannel.onopen = (event: Event) =>
+                this._emitter.emit('open', event);
 
-            this.dataChannel.onmessage = (event: RTCMessageEvent) =>
-                this.emitter.emit('message', event);
+            this._dataChannel.onmessage = (event: RTCMessageEvent) =>
+                this._emitter.emit('message', event);
 
-            this.dataChannel.onclose = (event: Event) =>
-                this.emitter.emit('close', event);
+            this._dataChannel.onclose = (event: Event) =>
+                this._emitter.emit('close', event);
 
-            this.dataChannel.onerror = (event: Event) =>
-                this.emitter.emit('error', event);
+            this._dataChannel.onerror = (event: Event) =>
+                this._emitter.emit('error', event);
         }
 
         get label(): string {
-            return this.dataChannel.label;
+            return this._dataChannel.label;
         }
 
         get remote(): Remote {
@@ -28,31 +28,27 @@ module join {
         }
 
         set onopen(listener: (event: Event) => void) {
-            this.on('open', listener);
+            this._on('open', listener);
         }
 
         set onmessage(listener: (event: RTCMessageEvent) => void) {
-            this.on('message', listener);
+            this._on('message', listener);
         }
 
         set onclose(listener: (event: Event) => void) {
-            this.on('close', listener);
+            this._on('close', listener);
         }
 
         set onerror(listener: (event: Event) => void) {
-            this.on('error', listener);
+            this._on('error', listener);
         }
 
         set onsending(listener: () => void) {
-            this.on('sending', listener);
+            this._on('sending', listener);
         }
 
-        private on(type:string, listener: (event: any) => void) {
-            this.emitter.on(type, listener);
-        }
-
-        emit(type: string, listener: (event: any) => void) {
-            this.emitter.emit(type, listener);
+        private _on(type:string, listener: (event: any) => void) {
+            this._emitter.on(type, listener);
         }
 
         send(data: string): void ;
@@ -60,12 +56,12 @@ module join {
         send(data: ArrayBufferView): void;
         send(data: Blob): void;
         send(data: any) {
-            this.emitter.emit('sending');
-            this.dataChannel.send(data);
+            this._emitter.emit('sending');
+            this._dataChannel.send(data);
         }
 
         close() {
-            this.dataChannel.close();
+            this._dataChannel.close();
         }
     }
 }

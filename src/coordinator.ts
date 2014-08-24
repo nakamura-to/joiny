@@ -6,7 +6,7 @@ module join {
     if (getUserMedia) {
         getUserMedia = getUserMedia.bind(navigator);
     } else {
-        throw new Error('navigator.getUserMedia is not supported');
+        throw new Error('navigator._getUserMedia is not supported');
     }
 
     export class Config {
@@ -49,29 +49,29 @@ module join {
 
     export class Coordinator {
 
-        private config: Config;
+        private _config: Config;
         private _local: Local;
-        private signalingChannel: SignalingChannel;
-        private session: Session;
-        private localStream: any;
+        private _signalingChannel: SignalingChannel;
+        private _session: Session;
+        private _localStream: any;
 
         constructor(options: any) {
             options = options || {};
 
-            this.config = new Config();
-            this.config.name = options.name || Config.NAME;
-            this.config.key = options.key || Config.KEY;
-            this.config.credential = options.credential || Config.CREDENTIAL;
-            this.config.host = options.host || Config.HOST;
-            this.config.secure = options.secure || false;
-            this.config.iceServers = options.iceServers || Config.ICE_SERVERS;
-            this.config.media = options.media || Config.MEDIA;
-            this.config.channels = options.channels || Config.CHANNELS;
-            this.config.logger = options.logger || Config.LOGGER;
+            this._config = new Config();
+            this._config.name = options.name || Config.NAME;
+            this._config.key = options.key || Config.KEY;
+            this._config.credential = options.credential || Config.CREDENTIAL;
+            this._config.host = options.host || Config.HOST;
+            this._config.secure = options.secure || false;
+            this._config.iceServers = options.iceServers || Config.ICE_SERVERS;
+            this._config.media = options.media || Config.MEDIA;
+            this._config.channels = options.channels || Config.CHANNELS;
+            this._config.logger = options.logger || Config.LOGGER;
 
-            this._local = new Local(this.config.name);
-            this.signalingChannel = new SignalingChannel(this.config.host, this.config.secure);
-            this.session = new Session(this.local, this.config.logger);
+            this._local = new Local(this._config.name);
+            this._signalingChannel = new SignalingChannel(this._config.host, this._config.secure);
+            this._session = new Session(this.local, this._config.logger);
         }
 
         get local(): Local {
@@ -83,71 +83,71 @@ module join {
         }
 
         start() {
-            this.initSignalingChannel();
-            this.signalingChannel.start();
+            this._initSignalingChannel();
+            this._signalingChannel.start();
         }
 
         close() {
             this.local.close();
         }
 
-        initSignalingChannel() {
+        private _initSignalingChannel() {
             var local = this.local;
 
-            this.signalingChannel.onopen = () => {
-                this.config.logger('debug', 'signalingChannel opened');
-                this.signalingChannel.send({
+            this._signalingChannel.onopen = () => {
+                this._config.logger('debug', 'signalingChannel opened');
+                this._signalingChannel.send({
                     type: 'subscription',
-                    key: this.config.key,
-                    credential: this.config.credential,
+                    key: this._config.key,
+                    credential: this._config.credential,
                     src: local,
                     dest: null});
             };
 
-            this.signalingChannel.onsubscription = (signal: ISubscriptionSignal) => {
+            this._signalingChannel.onsubscription = (signal: ISubscriptionSignal) => {
                 this.local.id = signal.id;
                 this.local.signal = signal;
-                this.config.logger('debug', 'subscription received: [' + local.id + ']');
+                this._config.logger('debug', 'subscription received: [' + local.id + ']');
                 this.local.local();
-                this.getUserMedia((stream: any) => {
-                    this.localStream = stream;
+                this._getUserMedia((stream: any) => {
+                    this._localStream = stream;
                     signal.peers.forEach((peer) => {
-                        var init = this.initConnection.bind(this);
-                        var connection = this.session.createConnection(this.createRTCPeerConnection(), this.config.channels, peer, init);
+                        var init = this._initConnection.bind(this);
+                        var connection = this._session.createConnection(this._createRTCPeerConnection(), this._config.channels, peer, init);
                         connection.createOffer();
                     });
                 });
             };
 
-            this.signalingChannel.onicecandidate = (signal: IIceCandidateSignal) => {
-                this.config.logger('debug', 'icecandidate received: [' + this.local.id + '<-' + signal.src.id + ']');
-                var connection = this.session.findConnection(signal.src);
+            this._signalingChannel.onicecandidate = (signal: IIceCandidateSignal) => {
+                this._config.logger('debug', 'icecandidate received: [' + this.local.id + '<-' + signal.src.id + ']');
+                var connection = this._session.findConnection(signal.src);
                 connection.addIceCandidate(signal.candidate);
             };
 
-            this.signalingChannel.onoffer = (signal: IOfferSignal) => {
-                this.config.logger('debug', 'offer received: [' + local.id + '<-' + signal.src.id + ']');
-                var init = this.initConnection.bind(this);
-                var connection = this.session.createConnection(this.createRTCPeerConnection(), signal.channels, signal.src, init);
+            this._signalingChannel.onoffer = (signal: IOfferSignal) => {
+                this._config.logger('debug', 'offer received: [' + local.id + '<-' + signal.src.id + ']');
+                var init = this._initConnection.bind(this);
+                var connection = this._session.createConnection(this._createRTCPeerConnection(), signal.channels, signal.src, init);
                 connection.setRemoteDescription(signal.offer);
                 connection.createAnswer();
             };
 
-            this.signalingChannel.onanswer = (signal: IAnswerSignal) => {
-                this.config.logger('debug', 'answer received: [' + local.id + '<-' + signal.src.id + ']');
-                var connection = this.session.findConnection(signal.src);
+            this._signalingChannel.onanswer = (signal: IAnswerSignal) => {
+                this._config.logger('debug', 'answer received: [' + local.id + '<-' + signal.src.id + ']');
+                var connection = this._session.findConnection(signal.src);
                 connection.setRemoteDescription(signal.answer);
             };
         }
 
-        initConnection(connection: Connection) {
+        private _initConnection(connection: Connection) {
             var local = connection.local;
             var remote = connection.remote;
 
             connection.onicecandidate = (event) => {
                 if (event.candidate) {
-                    this.config.logger('debug', 'icecandidate sending: [' + local.id + '->' + remote.id + ']');
-                    this.signalingChannel.send({
+                    this._config.logger('debug', 'icecandidate sending: [' + local.id + '->' + remote.id + ']');
+                    this._signalingChannel.send({
                         type: 'icecandidate',
                         candidate: event.candidate,
                         src: local,
@@ -157,19 +157,19 @@ module join {
             };
 
             connection.onoffer = (offer) => {
-                this.config.logger('debug', 'offer sending: [' + local.id + '->' + remote.id + ']');
-                this.signalingChannel.send({
+                this._config.logger('debug', 'offer sending: [' + local.id + '->' + remote.id + ']');
+                this._signalingChannel.send({
                     type: 'offer',
                     offer: offer,
-                    channels: this.config.channels,
+                    channels: this._config.channels,
                     src: local,
                     dest: remote
                 });
             };
 
             connection.onanswer = (answer) => {
-                this.config.logger('debug', 'answer sending: [' + local.id + '->' + remote.id + ']');
-                this.signalingChannel.send({
+                this._config.logger('debug', 'answer sending: [' + local.id + '->' + remote.id + ']');
+                this._signalingChannel.send({
                     type: 'answer',
                     answer: answer,
                     src: local,
@@ -179,41 +179,41 @@ module join {
 
             connection.oniceconnectionstatechange = (event) => {
                 var state = event.target.iceConnectionState;
-                this.config.logger('debug', 'iceconnectionstatechange: ' + state + ': [' + local.id + '->' + remote.id + ']');
+                this._config.logger('debug', 'iceconnectionstatechange: ' + state + ': [' + local.id + '->' + remote.id + ']');
                 if (state === 'disconnected' || state === 'failed') {
                     remote.close();
                 }
             };
 
             connection.onaddstream = (event) => {
-                this.config.logger('debug', 'addstream');
+                this._config.logger('debug', 'addstream');
                 remote.stream(event.stream);
             };
 
             connection.onerror = (error) => {
-                this.config.logger('error', error);
+                this._config.logger('error', error);
                 remote.close();
             };
 
-            if (this.localStream) {
-                connection.addStream(this.localStream);
+            if (this._localStream) {
+                connection.addStream(this._localStream);
             }
         }
 
-        createRTCPeerConnection(): RTCPeerConnection {
-            return new RTCPeerConnection({iceServers: this.config.iceServers});
+        private _createRTCPeerConnection(): RTCPeerConnection {
+            return new RTCPeerConnection({iceServers: this._config.iceServers});
         }
 
-        getUserMedia(next: (stream: any) => void) {
-            if (this.config.media.video || this.config.media.audio) {
+        private _getUserMedia(next: (stream: any) => void) {
+            if (this._config.media.video || this._config.media.audio) {
                 getUserMedia(
-                    this.config.media,
+                    this._config.media,
                     (stream: any) => {
                         this.local.stream(stream);
                         next(stream);
                     },
                     (error: Error) => {
-                        this.config.logger('info', error.name + ': ' + error.message);
+                        this._config.logger('info', error.name + ': ' + error.message);
                         next(null);
                     }
                 );
