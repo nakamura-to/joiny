@@ -7,7 +7,7 @@ var karmaCommonConf = {
     browsers: ['Chrome'],
     frameworks: ['jasmine'],
     files: [
-        'src/**/*.js',
+        'dist/**/*.js',
         'test/**/*.spec.js'
     ]
 };
