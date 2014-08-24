@@ -6,13 +6,13 @@ module join {
         private connections: { [id: string]: Connection } = {};
         private bundles: { [label: string]: ChannelBundle } = {};
 
-        constructor(private local: Local, private iceServers: any, private logger: (log: string, message: string) => void) {
+        constructor(private local: Local, private logger: (log: string, message: string) => void) {
         }
 
-        createConnection(channelsConfig: any, peer: IPeer, init: any): Connection {
+        createConnection(peerConnection: RTCPeerConnection, channelsConfig: any, peer: IPeer, init: any): Connection {
             var local = this.local;
             var remote = new Remote(peer.id, peer.name);
-            var connection = new Connection(new RTCPeerConnection({iceServers: this.iceServers}), local, remote);
+            var connection = new Connection(peerConnection, local, remote);
 
             this.logger('debug', 'peer connection opend: [' + local.id + '<->' + remote.id + ']');
 

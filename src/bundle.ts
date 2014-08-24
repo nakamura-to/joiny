@@ -81,7 +81,7 @@ module join {
 
         close () {
             this.channels.forEach(channel => channel.close());
-            this.channels = null;
+            this.channels = [];
             this.emitter.emit('close');
         }
     }

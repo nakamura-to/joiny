@@ -90,7 +90,7 @@ var join;
             this.channels.forEach(function (channel) {
                 return channel.close();
             });
-            this.channels = null;
+            this.channels = [];
             this.emitter.emit('close');
         };
         return ChannelBundle;
@@ -181,6 +181,10 @@ var join;
 
         Channel.prototype.on = function (type, listener) {
             this.emitter.on(type, listener);
+        };
+
+        Channel.prototype.emit = function (type, listener) {
+            this.emitter.emit(type, listener);
         };
 
         Channel.prototype.send = function (data) {
@@ -403,7 +407,7 @@ var join;
 
             this._local = new join.Local(this.config.name);
             this.signalingChannel = new join.SignalingChannel(this.config.host, this.config.secure);
-            this.session = new join.Session(this.local, this.config.iceServers, this.config.logger);
+            this.session = new join.Session(this.local, this.config.logger);
         }
         Object.defineProperty(Coordinator.prototype, "local", {
             get: function () {
@@ -449,7 +453,7 @@ var join;
                     _this.localStream = stream;
                     signal.peers.forEach(function (peer) {
                         var init = _this.initConnection.bind(_this);
-                        var connection = _this.session.createConnection(_this.config.channels, peer, init);
+                        var connection = _this.session.createConnection(_this.createRTCPeerConnection(), _this.config.channels, peer, init);
                         connection.createOffer();
                     });
                 });
@@ -464,7 +468,7 @@ var join;
             this.signalingChannel.onoffer = function (signal) {
                 _this.config.logger('debug', 'offer received: [' + local.id + '<-' + signal.src.id + ']');
                 var init = _this.initConnection.bind(_this);
-                var connection = _this.session.createConnection(signal.channels, signal.src, init);
+                var connection = _this.session.createConnection(_this.createRTCPeerConnection(), signal.channels, signal.src, init);
                 connection.setRemoteDescription(signal.offer);
                 connection.createAnswer();
             };
@@ -483,7 +487,7 @@ var join;
 
             connection.onicecandidate = function (event) {
                 if (event.candidate) {
-                    _this.config.logger('debug', 'icecandidate seding: [' + local.id + '->' + remote.id + ']');
+                    _this.config.logger('debug', 'icecandidate sending: [' + local.id + '->' + remote.id + ']');
                     _this.signalingChannel.send({
                         type: 'icecandidate',
                         candidate: event.candidate,
@@ -535,6 +539,10 @@ var join;
             if (this.localStream) {
                 connection.addStream(this.localStream);
             }
+        };
+
+        Coordinator.prototype.createRTCPeerConnection = function () {
+            return new RTCPeerConnection({ iceServers: this.config.iceServers });
         };
 
         Coordinator.prototype.getUserMedia = function (next) {
@@ -668,18 +676,17 @@ var join;
     'use strict';
 
     var Session = (function () {
-        function Session(local, iceServers, logger) {
+        function Session(local, logger) {
             this.local = local;
-            this.iceServers = iceServers;
             this.logger = logger;
             this.connections = {};
             this.bundles = {};
         }
-        Session.prototype.createConnection = function (channelsConfig, peer, init) {
+        Session.prototype.createConnection = function (peerConnection, channelsConfig, peer, init) {
             var _this = this;
             var local = this.local;
             var remote = new join.Remote(peer.id, peer.name);
-            var connection = new join.Connection(new RTCPeerConnection({ iceServers: this.iceServers }), local, remote);
+            var connection = new join.Connection(peerConnection, local, remote);
 
             this.logger('debug', 'peer connection opend: [' + local.id + '<->' + remote.id + ']');
 

@@ -71,7 +71,7 @@ module join {
 
             this._local = new Local(this.config.name);
             this.signalingChannel = new SignalingChannel(this.config.host, this.config.secure);
-            this.session = new Session(this.local, this.config.iceServers, this.config.logger);
+            this.session = new Session(this.local, this.config.logger);
         }
 
         get local(): Local {
@@ -113,7 +113,7 @@ module join {
                     this.localStream = stream;
                     signal.peers.forEach((peer) => {
                         var init = this.initConnection.bind(this);
-                        var connection = this.session.createConnection(this.config.channels, peer, init);
+                        var connection = this.session.createConnection(this.createRTCPeerConnection(), this.config.channels, peer, init);
                         connection.createOffer();
                     });
                 });
@@ -128,7 +128,7 @@ module join {
             this.signalingChannel.onoffer = (signal: IOfferSignal) => {
                 this.config.logger('debug', 'offer received: [' + local.id + '<-' + signal.src.id + ']');
                 var init = this.initConnection.bind(this);
-                var connection = this.session.createConnection(signal.channels, signal.src, init);
+                var connection = this.session.createConnection(this.createRTCPeerConnection(), signal.channels, signal.src, init);
                 connection.setRemoteDescription(signal.offer);
                 connection.createAnswer();
             };
@@ -198,6 +198,10 @@ module join {
             if (this.localStream) {
                 connection.addStream(this.localStream);
             }
+        }
+
+        createRTCPeerConnection(): RTCPeerConnection {
+            return new RTCPeerConnection({iceServers: this.config.iceServers});
         }
 
         getUserMedia(next: (stream: any) => void) {

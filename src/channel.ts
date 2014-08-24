@@ -51,6 +51,10 @@ module join {
             this.emitter.on(type, listener);
         }
 
+        emit(type: string, listener: (event: any) => void) {
+            this.emitter.emit(type, listener);
+        }
+
         send(data: string): void ;
         send(data: ArrayBuffer): void;
         send(data: ArrayBufferView): void;
