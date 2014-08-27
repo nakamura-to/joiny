@@ -3,21 +3,16 @@ var tsc = require('gulp-tsc');
 var _ = require('lodash');
 var karma = require('karma').server;
 
-var karmaCommonConf = {
-    browsers: ['Chrome'],
-    frameworks: ['jasmine'],
-    files: [
-        'dist/**/*.js',
-        'test/**/*.spec.js'
-    ]
-};
-
 gulp.task('test', function (done) {
-    karma.start(_.assign({}, karmaCommonConf, {singleRun: true}), done);
-});
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done);});
 
 gulp.task('tdd', function (done) {
-    karma.start(karmaCommonConf, done);
+    karma.start({
+        configFile: __dirname + '/karma.conf.js'
+    }, done);
 });
 
 gulp.task("compile", function() {
