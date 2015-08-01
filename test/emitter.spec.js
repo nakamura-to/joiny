@@ -1,23 +1,22 @@
-describe('EventEmitter', function () {
+import expect from 'expect';
+import { EventEmitter } from '../src/emitter';
 
-    it('should listen to events', function () {
-        var emitter = new join.EventEmitter();
-        var count = 0;
-        emitter.on('increment', function () {
-            count++;
-        });
-        emitter.on('decrement', function () {
-            count--;
-        });
-        expect(count).toBe(0);
-        emitter.emit('increment');
-        expect(count).toBe(1);
-        emitter.emit('decrement');
-        expect(count).toBe(0);
-        emitter.emit('increment');
-        expect(count).toBe(1);
-        emitter.emit('decrement');
-        expect(count).toBe(0);
-    });
+describe('EventEmitter', () => {
+
+  it('should listen to events', () => {
+    var emitter = new EventEmitter();
+    var count = 0;
+    emitter.on('increment', () => count++);
+    emitter.on('decrement', () => count--);
+    expect(count).toBe(0);
+    emitter.emit('increment');
+    expect(count).toBe(1);
+    emitter.emit('decrement');
+    expect(count).toBe(0);
+    emitter.emit('increment');
+    expect(count).toBe(1);
+    emitter.emit('decrement');
+    expect(count).toBe(0);
+  });
 
 });

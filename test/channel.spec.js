@@ -1,79 +1,83 @@
-describe('Channel', function () {
+import expect from 'expect';
+import sinon from 'sinon';
+import { Channel } from '../src/channel';
 
-    it('should listen to an open event', function () {
-        var spy = jasmine.createSpy('spy');
-        var event = {};
+describe('Channel', () => {
 
-        var channel = new join.Channel({}, {});
-        channel.onopen = spy;
-        channel._emitter.emit('open', event);
+  it('should listen to an open event', () => {
+    var spy = sinon.spy();
+    var event = {};
 
-        expect(spy).toHaveBeenCalledWith(event);
-    });
+    var channel = new Channel({}, {});
+    channel.onopen = spy;
+    channel._emitter.emit('open', event);
 
-    it('should listen to a message event', function () {
-        var spy = jasmine.createSpy('spy');
-        var event = {};
+    expect(spy.calledWith(event)).toBe(true);
+  });
 
-        var channel = new join.Channel({}, {});
-        channel.onmessage = spy;
-        channel._emitter.emit('message', event);
+  it('should listen to a message event', () => {
+    var spy = sinon.spy();
+    var event = {};
 
-        expect(spy).toHaveBeenCalledWith(event);
-    });
+    var channel = new Channel({}, {});
+    channel.onmessage = spy;
+    channel._emitter.emit('message', event);
 
-    it('should listen to an error event', function () {
-        var spy = jasmine.createSpy('spy');
-        var event = {};
+    expect(spy.calledWith(event)).toBe(true);
+  });
 
-        var channel = new join.Channel({}, {});
-        channel.onerror = spy;
-        channel._emitter.emit('error', event);
+  it('should listen to an error event', () => {
+    var spy = sinon.spy();
+    var event = {};
 
-        expect(spy).toHaveBeenCalledWith(event);
-    });
+    var channel = new Channel({}, {});
+    channel.onerror = spy;
+    channel._emitter.emit('error', event);
 
-    it('should listen to a close event', function () {
-        var spy = jasmine.createSpy('spy');
-        var event = {};
+    expect(spy.calledWith(event)).toBe(true);
+  });
 
-        var channel = new join.Channel({}, {});
-        channel.onclose = spy;
-        channel._emitter.emit('close', event);
+  it('should listen to a close event', () => {
+    var spy = sinon.spy();
+    var event = {};
 
-        expect(spy).toHaveBeenCalledWith(event);
-    });
+    var channel = new Channel({}, {});
+    channel.onclose = spy;
+    channel._emitter.emit('close', event);
 
-    it('should listen to a sending event', function () {
-        var spy = jasmine.createSpy('spy');
-        var event = {};
+    expect(spy.calledWith(event)).toBe(true);
+  });
 
-        var channel = new join.Channel({}, {});
-        channel.onsending = spy;
-        channel._emitter.emit('sending', event);
+  it('should listen to a sending event', () => {
+    var spy = sinon.spy();
+    var event = {};
 
-        expect(spy).toHaveBeenCalledWith(event);
-    });
+    var channel = new Channel({}, {});
+    channel.onsending = spy;
+    channel._emitter.emit('sending', event);
 
-    it('should send a message to a rtc data channel', function () {
-        var send = jasmine.createSpy('send');
-        var sending = jasmine.createSpy('sending');
+    expect(spy.calledWith(event)).toBe(true);
+  });
 
-        var channel = new join.Channel({ send: send }, {});
-        channel.onsending = sending;
-        channel.send('hello');
+  it('should send a message to a rtc data channel', () => {
+    var send = sinon.spy();
+    var sending = sinon.spy();
 
-        expect(sending).toHaveBeenCalled();
-        expect(send).toHaveBeenCalledWith('hello');
-    });
+    var channel = new Channel({ send: send }, {});
+    channel.onsending = sending;
+    channel.send('hello');
 
-    it('should close a rtc data channel', function () {
-        var close = jasmine.createSpy('close');
+    expect(sending.called).toBe(true);
+    expect(send.calledWith('hello')).toBe(true);
+  });
 
-        var channel = new join.Channel({ close: close }, {});
-        channel.close();
+  it('should close a rtc data channel', () => {
+    var close = sinon.spy();
 
-        expect(close).toHaveBeenCalled();
-    });
+    var channel = new Channel({ close: close }, {});
+    channel.close();
+
+    expect(close.called).toBe(true);
+  });
 
 });

@@ -1,3 +1,7 @@
+import {createWebRTC} from 'joiny';
+
+require('./style.css');
+
 (function ($) {
 
     var local;
@@ -62,7 +66,7 @@
     }
 
     function setupWebRTC(key, name) {
-        var webRTC = join.createWebRTC({
+        var webRTC = createWebRTC({
             key: key,
             name: name,
             secure: location.protocol === 'https:',
@@ -90,9 +94,9 @@
     function onRemote(remote) {
         var $container = $('<div>').attr('id', 'remote-user-' + remote.id);
         remote.on('stream', function (stream) {
-            $video = $('<video autoplay>')
+            var $video = $('<video autoplay>')
                 .attr('src', URL.createObjectURL(stream));
-            $name = $('<span>').text(makeDisplayName(remote));
+            var $name = $('<span>').text(makeDisplayName(remote));
             $container
                 .append($video)
                 .append($name)
@@ -135,7 +139,7 @@
     }
 
     function writeChatMessage(message, peer) {
-        $message = $('<span class="message">').text(message);
+        var $message = $('<span class="message">').text(message);
         writeElement($message, peer);
     }
 

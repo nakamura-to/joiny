@@ -1,26 +1,29 @@
-describe('Session', function () {
+import expect from 'expect';
+import { Session } from '../src/session';
 
-    it('should create a connection', function () {
-        var session = new join.Session({ remote: function () {} }, function() {});
-        var connection = session.createConnection({}, [], {}, function () {});
+describe('Session', () => {
 
-        expect(connection).toBeDefined();
-    });
+  it('should create a connection', () => {
+    var session = new Session({ remote: () => {} }, () => {});
+    var connection = session.createConnection({}, [], {}, () => {});
 
-    it('should find a connection', function () {
-        var session = new join.Session({ remote: function () {} }, function() {});
-        var connection = session.createConnection({}, [], { id: 0, name: 'remote' }, function () {});
-        var foundConnection = session.findConnection({ id: 0 });
+    expect(connection).toNotBe(undefined);
+  });
 
-        expect(connection).toBeDefined();
-        expect(connection).toEqual(foundConnection);
-    });
+  it('should find a connection', () => {
+    var session = new Session({ remote: () => {} }, () => {});
+    var connection = session.createConnection({}, [], { id: 0, name: 'remote' }, () => {});
+    var foundConnection = session.findConnection({ id: 0 });
 
-    it('should throw an Error when a connection is not found', function () {
-        var session = new join.Session({ remote: function () {} }, function() {});
-        expect(function () {
-            session.findConnection({ id: 0, name: 'unknown' });
-        }).toThrowError('connection [0] not found');
-    });
+    expect(connection).toNotBe(undefined);
+    expect(connection).toEqual(foundConnection);
+  });
+
+  it('should throw an Error when a connection is not found', () => {
+    var session = new Session({ remote: () => {} }, () => {});
+    expect(() => {
+      session.findConnection({ id: 0, name: 'unknown' });
+    }).toThrow('connection [0] not found');
+  });
 
 });

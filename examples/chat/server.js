@@ -1,62 +1,26 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-var path = require('path');
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
+var config = require('./webpack.config');
 var Websocket = require('websocket').server;
 
-var port = process.env.PORT || 1234;
-var connections = [];
-var peerId = 0;
-
-var CINTENT_TYPES = {
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.css': 'text/css'
-};
-
-// web server
-var httpServer = http.createServer(function(request, response) {
-    var pathname = url.parse(request.url).pathname;
-    console.log(pathname);
-    if (pathname === '/') {
-        pathname = 'index.html';
-    } else if (pathname === '/join.js') {
-        pathname = '../dist/join.js';
-    }
-    var filename = path.join(process.cwd(), pathname);
-    console.log(filename);
-    fs.exists(filename, function (exists) {
-        if (exists) {
-            fs.readFile(filename, function (err, data) {
-                if (err) {
-                    response.writeHead(500, {'Content-Type': 'text/plain'});
-                    response.end(err + '\n');
-                } else {
-                    response.writeHead(200, {
-                        'Content-Type': CINTENT_TYPES[path.extname(filename)],
-                        'Cache-Control': 'no-store, no-cache'
-                    });
-                    response.end(data);
-                }
-            });
-        } else {
-            response.writeHead(404, {'Content-Type': 'text/plain'});
-            response.end('404\n');
-        }
-    });
-
-    function endsWith(str, ends){
-        return str.length >= ends.length && str.slice(str.length - ends.length) === ends;
-    }
-
+var webpackDevServer = new WebpackDevServer(webpack(config), {
+  publicPath: config.output.publicPath,
+  hot: true,
+  historyApiFallback: true
 });
 
-httpServer.listen(port, function() {
-    console.log('server listening (port ' + port + ')');
+webpackDevServer.listen(3000, 'localhost', function (err, result) {
+  if (err) {
+    console.log(err);
+  }
+
+  console.log('Listening at localhost:3000');
 });
 
 // websocket server
-var websocketServer = new Websocket({httpServer: httpServer});
+var websocketServer = new Websocket({httpServer: webpackDevServer.listeningApp});
+var connections = [];
+var peerId = 0;
 
 websocketServer.on('request', function(request) {
     var connection = request.accept(null, request.origin);
