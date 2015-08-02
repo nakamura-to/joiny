@@ -1,0 +1,65 @@
+#main {
+  display: none
+}
+
+#video-list > div {
+  float: left;
+}
+
+#video-list video {
+  display: block;
+  margin-right: 10px;
+  width: 230px;
+  height: 200px;
+  background: #333333;
+}
+
+#video-list:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+#board {
+  margin-top: 10px;
+  padding: 5px;
+  height: 200px;
+  width: 500px;
+  overflow: auto;
+  border: 1px solid #ccc;
+}
+
+#board .name {
+  font-size: small;
+}
+
+#board .message {
+  margin-left: 10px;
+  font-size: large;
+}
+
+#board .system-message {
+  font-size: x-small;
+  font-style: italic;
+}
+
+#message {
+  margin-top: 15px;
+  width: 500px;
+}
+
+#description {
+  margin-top: 15px;
+  padding: 5px;
+}
+
+#log {
+  margin-top: 15px;
+  padding: 5px;
+  height: 200px;
+  width: 500px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  font-size: 5px;
+  display: none;
+}

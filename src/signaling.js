@@ -6,8 +6,8 @@ export class SignalingChannel {
   _webSocket;
   _emitter = new EventEmitter();
 
-  constructor(_host, _secure) {
-    this._url = (_secure ? 'wss' : 'ws') + '://' + _host;
+  constructor(_host, _path, _secure) {
+    this._url = (_secure ? 'wss' : 'ws') + '://' + _host + '/' + _path;
   }
 
   start() {

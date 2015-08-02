@@ -4,4 +4,3 @@ examples/chat/node_modules
 examples/chat/dist
 examples/chat/server.js
 examples/chat/webpack.config.js
-examples/chat/index.js

@@ -23,6 +23,9 @@ export class Config {
   // default signaling server host
   static HOST = location.host;
 
+  // default path
+  static PATH = '';
+
   // default ice servers
   static ICE_SERVERS = [ {'url': 'stun: stun.l.google.com:19302' } ];
 
@@ -64,6 +67,7 @@ export class Coordinator {
     this._config.key = opts.key || Config.KEY;
     this._config.credential = opts.credential || Config.CREDENTIAL;
     this._config.host = opts.host || Config.HOST;
+    this._config.path = opts.path || Config.PATH;
     this._config.secure = opts.secure || false;
     this._config.iceServers = opts.iceServers || Config.ICE_SERVERS;
     this._config.media = opts.media || Config.MEDIA;
@@ -71,7 +75,7 @@ export class Coordinator {
     this._config.logger = opts.logger || Config.LOGGER;
 
     this._local = new Local(this._config.name);
-    this._signalingChannel = new SignalingChannel(this._config.host, this._config.secure);
+    this._signalingChannel = new SignalingChannel(this._config.host, this._config.path, this._config.secure);
     this._session = new Session(this.local, this._config.logger);
   }
 
