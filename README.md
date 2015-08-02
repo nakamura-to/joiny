@@ -1,11 +1,13 @@
-JoinJS - Simple Multicast with WebRTC
-===================================
+JoinyJS - Simple Multicast with WebRTC
+=======================================
 
-JoinJS simplifies WebRTC API and allows you to communicate with multiple peers transparently.
+JoinyJS simplifies WebRTC API and allows you to communicate with multiple peers transparently.
 
 ```js
+import { createWebRTC } from 'joiny';
+
 // get a WebRTC object
-var webRTC = join.createWebRTC({
+const webRTC = createWebRTC({
     media: { video: true, audio: true }
     channels: [
         { chat: { reliable: false } },
@@ -13,17 +15,17 @@ var webRTC = join.createWebRTC({
     ]
 });
 
-// get a local peer with the `onLocal` callback
-webRTC.on('local', onLocal);
+// get a local peer with a callback
+webRTC.on('local', (peer) => { ... });
 
-// get a remote peer with the `onRemote` callback
-webRTC.on('remote', onRemote);
+// get a remote peer with a callback
+webRTC.on('remote', (peer) => { ... });
 
-// get a chat channel bundle with the `onChatChannel` callback
-webRTC.on('chat.channel', onChatChannel);
+// get a chat channel bundle with a callback
+webRTC.on('chat.channel', (channel) => { ... });
 
-// get a file channel bundle with the `onFileChannel` callback
-webRTC.on('file.channel', onFileChannel);
+// get a file channel bundle with a callback
+webRTC.on('file.channel', (channel) => { ... });
 
 // start communication
 webRTC.start();
@@ -32,49 +34,31 @@ webRTC.start();
 Description
 -----------
 
-- written in TypeScript.
-- tested on Chrome 36 and Firefox 31.
+- written in ES6.
+- tested on Chrome 44.0.2403.125.
 - uses WebSocket as a signaling channel.
 - operates same kind of channels as a bundled channel for transparent multicast.
 - detects entering and leaving of remote peers.
 
-
-Demo : Chat Room
-----------------
+Example : Chat Room
+--------------------
 
 ```shell
-$ cd demo
+$ cd examples/chat
 $ npm install
-$ node server.js
+$ npm start
 ```
 
-Access `http://localhost:1234` with some browsers.
+Access `http://localhost:3000` with some browsers.
 
 Push the "Connect" Button on each browser.
-
-Usage
------
-
-Include dist/join.js into your html file.
-
-```html
-<script src="join.js"></script>
-```
-
-API
----
-
-see [api.md](api.md).
 
 Build
 -----
 
 ```shell
-$ npm install typescript -g
-$ npm install tsd -g
 $ npm install
-$ tsd reinstall -so
-$ gulp
+$ npm run build
 ```
 
 License
