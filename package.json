@@ -23,7 +23,7 @@
   "author": "Toshihiro Nakamura",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nakamura-to/join.git"
+    "url": "git://github.com/nakamura-to/joiny.git"
   },
   "license": "MIT",
   "engines": {
