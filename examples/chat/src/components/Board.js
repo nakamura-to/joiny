@@ -41,11 +41,13 @@ export default class Board extends Component {
   }
 
   scrollElement() {
-    window.requestAnimationFrame(() => {
-      if (this.refs && this.refs.board) {
-        const node = this.refs.board;
-        node.scrollTop = node.scrollHeight;
-      }
-    });
+    if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+      window.requestAnimationFrame(() => {
+        if (this.refs && this.refs.board) {
+          const node = this.refs.board;
+          node.scrollTop = node.scrollHeight;
+        }
+      });
+    }
   }
 }

@@ -27,7 +27,7 @@ function createMessageId(messages) {
   return last.id + 1;
 }
 
-export default function todos(state = initialState, action) {
+export default function chat(state = initialState, action) {
   switch (action.type) {
   case CONNECT:
     {

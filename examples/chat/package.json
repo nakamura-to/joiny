@@ -6,7 +6,9 @@
   "scripts": {
     "build": "webpack",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src test",
+    "test": "mocha --compilers js:babel/register --recursive",
+    "test:watch": "npm test -- --watch"
   },
   "author": "Toshihiro Nakamura",
   "license": "MIT",
@@ -24,6 +26,9 @@
     "eslint-config-airbnb": "0.0.7",
     "eslint-loader": "^0.14.2",
     "eslint-plugin-react": "^3.1.0",
+    "expect": "^1.8.0",
+    "mocha": "^2.2.5",
+    "react-addons-test-utils": "^0.14.0-beta2",
     "react-hot-loader": "^1.2.8",
     "react-redux": "^0.2.2",
     "redux": "^1.0.0-rc",

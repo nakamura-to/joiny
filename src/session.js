@@ -1,6 +1,6 @@
-import { ChannelBundle } from '../src/bundle';
-import { Connection } from '../src/connection';
-import { Remote } from '../src/peer';
+import { ChannelBundle } from './bundle';
+import { Connection } from './connection';
+import { Remote } from './peer';
 
 export class Session {
 
